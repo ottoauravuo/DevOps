@@ -1,0 +1,47 @@
+<div class="example-container">
+  <mat-form-field appearance="fill" [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+    <mat-label>Etunimi</mat-label>
+    <input type="text" formControlName="firstName" matInput>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+    <mat-label>Sukunimi</mat-label>
+    <input type="text" formControlName="lastName" matInput>
+  </mat-form-field>
+</div>
+
+<div class="example-container">
+  <mat-form-field appearance="fill" [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+    <mat-label>Henkilönumero</mat-label>
+    <input type="text" formControlName="personID" matInput>
+  </mat-form-field>
+</div>
+
+<div class="example-container">
+  <mat-form-field appearance="fill" [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+    <mat-label>Sähköposti</mat-label>
+    <input type="email" formControlName="email" matInput placeholder="pat@example.com" >
+  </mat-form-field>
+</div>
+
+<div class="example-container">
+  <mat-form-field appearance="fill" [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+    <mat-label>Käyttäjänimi</mat-label>
+    <input type="text" formControlName="username" matInput>
+  </mat-form-field>
+</div>
+
+<div class="example-container">
+  <mat-form-field appearance="fill" [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+    <mat-label>Salasana</mat-label>
+    <input type="password" formControlName="password" matInput>
+  </mat-form-field>
+</div>
+
+<form [formGroup]="profileForm">
+  <label> <input type="checkbox" formControlName="checked">Hyväksyn käyttöehdot</label>
+</form>
+<br>
+<div class="example-button-row">
+  <button mat-raised-button color="primary" type="submit" [disabled]="!profileForm.valid">Lähetä</button>
+</div>
