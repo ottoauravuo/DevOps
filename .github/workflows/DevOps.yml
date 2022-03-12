@@ -54,9 +54,10 @@ jobs:
         with:
           name: webpack artifacts
           path: public
-      - uses: akhileshns/heroku-deploy@v3.10.9
+      - name: Publish in heroku
+        uses: akhileshns/heroku-deploy@v3.10.9
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-          heroku_app_name: "tic-tac-toe-docker-test"
-          heroku_email: "tommi.kallonen@lab.fi"
+          heroku_app_name: "devops-testi"
+          heroku_email: "otto.auravuo@hotmail.com"
           usedocker: true
