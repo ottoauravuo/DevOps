@@ -1,17 +1,62 @@
 name: DevOps
-on: [push]
+
+on:
+  push:
+
 jobs:
-  Explore-GitHub-Actions:
+  build:
     runs-on: ubuntu-latest
+
     steps:
-      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
-      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
-      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
-      - name: Check out repository code
-        uses: actions/checkout@v2
-      - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
-      - run: echo "🖥️ The workflow is now ready to test your code on the runner."
-      - name: List files in the repository
+      - uses: actions/checkout@v1
+      - name: npm install and build webpack
         run: |
-          ls ${{ github.workspace }}
-      - run: echo "🍏 This job's status is ${{ job.status }}."
+          npm install
+          npm run build
+      - uses: actions/upload-artifact@master
+        with:
+          name: webpack artifacts
+          path: public/
+  test:
+    runs-on: ubuntu-latest
+    needs: build
+    strategy:
+      matrix:
+        os: [ubuntu-lastest, windows-2016]
+        node-version: [12.x, 14.x]
+
+    steps:
+      - uses: actions/checkout@v1
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - uses: actions/download-artifact@master
+        with:
+          name: webpack artifacts
+          path: public
+      - name: npm install, and test
+        run: |
+          npm install
+          npm test
+        env:
+          CI: true
+  Build-and-Push-Docker-Image:
+    runs-on: ubuntu-latest
+    needs: test
+    name: Docker Build, Tag, Push
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Download built artifact
+        uses: actions/download-artifact@main
+        with:
+          name: webpack artifacts
+          path: public
+      - uses: akhileshns/heroku-deploy@v3.10.9
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: "tic-tac-toe-docker-test"
+          heroku_email: "tommi.kallonen@lab.fi"
+          usedocker: true
